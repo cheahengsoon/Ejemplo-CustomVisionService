@@ -13,5 +13,20 @@ namespace CustomVision
         {
             InitializeComponent();
         }
+
+        private void ElegirImage(object sender, EventArgs e)
+        {
+
+        }
+
+        private void TomarFoto(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Clasificar(object sender, EventArgs e)
+        {
+
+        }
     }
 }

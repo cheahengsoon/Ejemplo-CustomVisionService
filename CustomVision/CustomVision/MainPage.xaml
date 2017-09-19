@@ -11,9 +11,13 @@
         <Button Text="Elegir una imagen" Clicked="ElegirImage"></Button>
         
         <Button Text="Tomar una foto" Clicked="TomarFoto"></Button>
-        
+
         <Button Text="Clasificar" Clicked="Clasificar"></Button>
-        
+
+        <Label x:Name="ResponseLabel"></Label>
+
+        <ProgressBar x:Name="Accuracy" HeightRequest="20"/>
+
     </StackLayout>
 
 </ContentPage>

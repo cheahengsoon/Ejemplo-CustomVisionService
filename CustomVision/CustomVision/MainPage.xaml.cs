@@ -1,17 +1,17 @@
 ﻿using Newtonsoft.Json;
 using Plugin.Media.Abstractions;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace CustomVision
 {
     public partial class MainPage : ContentPage
     {
+        public const string ServiceApiUrl = "PON_TU_SERVICE_API_AQUI";//"https://southcentralus.api.cognitive.microsoft.com/customvision/v1.0/Prediction/701b4eed-c0b1-4f4d-86af-873a7b4ad6a3/image";
+        public const string ApiKey = "PON_TU_API_KEY_AQUI";
+
         private MediaFile _foto = null;
         public MainPage()
         {
@@ -47,8 +47,8 @@ namespace CustomVision
                 var stream = _foto.GetStream();
 
                 var httpClient = new HttpClient();
-                var url = "https://southcentralus.api.cognitive.microsoft.com/customvision/v1.0/Prediction/701b4eed-c0b1-4f4d-86af-873a7b4ad6a3/image";
-                httpClient.DefaultRequestHeaders.Add("Prediction-Key", "c1561b9c08134ce69773e368ace40fe6");
+                var url = ServiceApiUrl;
+                httpClient.DefaultRequestHeaders.Add("Prediction-Key",ApiKey);
 
                 var content = new StreamContent(stream);
 
@@ -56,7 +56,8 @@ namespace CustomVision
 
                 if (!response.IsSuccessStatusCode)
                 {
-
+                    Acr.UserDialogs.UserDialogs.Instance.Toast("Hubo un error en la deteccion...");
+                    return;
                 }
 
                 var json = await response.Content.ReadAsStringAsync();
@@ -64,13 +65,16 @@ namespace CustomVision
                 var c = JsonConvert.DeserializeObject<ClasificationResponse>(json);
 
                 var p = c.Predictions.FirstOrDefault();
-                if (p == null) Acr.UserDialogs.UserDialogs.Instance.Toast("Image not found");
-
+                if (p == null)
+                {
+                    Acr.UserDialogs.UserDialogs.Instance.Toast("Image no reconocida.");
+                    return;
+                }
                 ResponseLabel.Text = $"{p.Tag} - {p.Probability:p0}";
                 Accuracy.Progress = p.Probability;
             }
 
-            Acr.UserDialogs.UserDialogs.Instance.Toast("Clasification finished...");
+            Acr.UserDialogs.UserDialogs.Instance.Toast("Clasificacion terminada...");
         }
     }
 
